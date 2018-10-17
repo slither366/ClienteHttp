@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use \stdClass;
+use \PDO;
 
 use GuzzleHttp\Client;
 use DB;
@@ -85,6 +86,30 @@ class Controller extends BaseController
 
 		return redirect('/');
 	}
+
+	public function pruebaProcedureHttp(){
+
+		$pdo = DB::getPdo();
+		$p1 = 'matematica';
+		$p2 = 'filosofia';
+
+		$stmt = $pdo->prepare("begin sp_prueba_http(:p1, :p2); end;");
+		$stmt->bindParam(':p1', $p1, PDO::PARAM_INT);
+		$stmt->bindParam(':p2', $p2, PDO::PARAM_INT);
+		$stmt->execute();
+
+		return redirect('/');
+	}	
+
+	public function pruebaFunctionHttp(){
+		// via Query Builder
+		$query= DB::select("SELECT f_prueba('lenguaje') AS mfrc FROM dual");
+
+		$uname=json_encode($query);
+		$array=json_decode($uname);
+
+		return $array;
+	}		
 
 	public function testOracle(){
 		$users=DB::select("SELECT * FROM int_recep_prod_qs WHERE rownum=1");

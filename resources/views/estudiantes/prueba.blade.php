@@ -24,6 +24,4 @@
 </tbody>
 </table>
 
-
-
 @endsection
