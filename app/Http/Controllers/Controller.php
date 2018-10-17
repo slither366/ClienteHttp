@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use \stdClass;
 
 use GuzzleHttp\Client;
 use DB;
@@ -31,12 +32,12 @@ class Controller extends BaseController
 		$respuesta = json_decode(
 			$this->realizarPeticion('POST','https://apilumen.juandmegon.com/oauth/access_token',
 				['form_params'=>
-					[
-						'grant_type'=>$grantType,
-						'client_id'=>$clientId,
-						'client_secret'=>$clientSecret
-					]
-				])
+				[
+					'grant_type'=>$grantType,
+					'client_id'=>$clientId,
+					'client_secret'=>$clientSecret
+				]
+			])
 		);
 
 		$accessToken = $respuesta->access_token;
@@ -44,29 +45,54 @@ class Controller extends BaseController
 		return $accessToken;
 	}
 
-	public function agregarEstudiante(){
-		return view('estudiantes.agregar');
-	}
-
 	public function crearEstudiante(Request $request){
-		//return $request->all();
-		$accessToken = 'Bearer' . $this->obtenerAccessToken();
+		$accessToken = 'Bearer ' . $this->obtenerAccessToken();
 
 		$respuesta = $this->realizarPeticion('POST','https://apilumen.juandmegon.com/estudiantes',
-				[
-					'headers'=>['Authorization'=>$accessToken],
-				 	'form_params'=>$request->all()
-				]
+			[
+				'headers'=>['Authorization'=>$accessToken],
+				'form_params'=>$request->all()
+			]
 
 		);
 
 		return redirect('/');
 	}
 
-	public function test(){
-		$users=DB::select('select * from int_recep_prod_qs where rownum=1');
+	public function pruebaBucleHttp(Request $request){
+
+		$query=DB::select(DB::raw("SELECT * FROM tb_alumno_http"));
+
+		//$uname=json_encode($query);
+		//$array=json_decode($uname);
+
+		$accessToken = 'Bearer ' . $this->obtenerAccessToken();
+
+		foreach ($query as $valor) {
+			$respuesta = $this->realizarPeticion('POST','https://apilumen.juandmegon.com/estudiantes',
+				[
+					'headers'=>['Authorization'=>$accessToken],
+					'form_params'=>//$request->all()
+					[
+						'nombre'=>$valor->nombre,
+						'direccion'=>$valor->direccion,
+						'telefono'=>$valor->telefono,
+						'carrera'=>'matemática'
+					]
+				]
+			);
+		}
+
+		return redirect('/');
+	}
+
+	public function testOracle(){
+		$users=DB::select("SELECT * FROM int_recep_prod_qs WHERE rownum=1");
 		var_dump($users);
 	}
 
+	public function agregarEstudiante(){
+		return view('estudiantes.agregar');
+	}
 
 }

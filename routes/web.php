@@ -13,6 +13,8 @@ Route::get('/prueba','Controller@obtenerAccessToken');
 
 Route::get('/data','Controller@test');
 
+Route::get('/pruebaquery','Controller@prueba');
+
 Route::get('/estudiantes/agregar', ['as'=>'addEstudiante', 'uses' => 'Controller@agregarEstudiante']);
 
-Route::post('/estudiantes/agregar', ['as'=>'addEstudiante', 'uses' => 'Controller@crearEstudiante']);
+Route::post('/estudiantes/agregar', ['as'=>'addEstudiante', 'uses' => 'Controller@prueba']);
