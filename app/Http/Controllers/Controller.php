@@ -6,6 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 use GuzzleHttp\Client;
 use DB;
@@ -43,13 +44,23 @@ class Controller extends BaseController
 		return $accessToken;
 	}
 
-	protected function agregarEstudiante(){
+	public function agregarEstudiante(){
 		return view('estudiantes.agregar');
-
 	}
 
-	protected function crearEstudiante(){
-		//
+	public function crearEstudiante(Request $request){
+		//return $request->all();
+		$accessToken = 'Bearer' . $this->obtenerAccessToken();
+
+		$respuesta = $this->realizarPeticion('POST','https://apilumen.juandmegon.com/estudiantes',
+				[
+					'headers'=>['Authorization'=>$accessToken],
+				 	'form_params'=>$request->all()
+				]
+
+		);
+
+		return redirect('/');
 	}
 
 	public function test(){

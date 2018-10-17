@@ -13,7 +13,7 @@
 </ul>
 
 <ul class="list-group">
-	<li href="{{ route('addEstudiante') }}" class="list-group-item">Agregar Nuevo Student</li>
-</ul>		
+	<li class="list-group-item"><a href="{{ route('addEstudiante') }}">Agregar Nuevo Student</a></li>
+</ul>
 
 @endsection
