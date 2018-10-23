@@ -120,4 +120,114 @@ class Controller extends BaseController
 		return view('estudiantes.agregar');
 	}
 
+	public function getAllDepositosOracle(){
+
+		//$query=DB::select(DB::raw("SELECT * FROM tb_alumno_http"));
+
+		//$query= DB::select("
+		$query=DB::select(DB::raw("
+			SELECT tod.* 
+			FROM(
+			SELECT td.cod_local, td.mes_periodo, td.ano_periodo, td.dia_cierre, 
+			       TO_CHAR(td.fecha_cierre_dia,'YYYY-mm-dd') fecha_cierre_dia, td.dia_op_banc, 
+			       TO_CHAR(td.fecha_op_bancaria,'YYYY-mm-dd hh24:mi:ss') fecha_op_bancaria, td.dif_min, 
+			       td.cant_dias, td.moneda, td.monto_deposito, td.num_operacion, 
+			       td.usuario, td.mon_tot_perdido, td.estado_cuadratura
+			FROM TB_DEP_BANK_PEND td
+			WHERE COD_LOCAL = 'A00'
+			AND CANT_DIAS <> '0'
+			ORDER BY COD_LOCAL,MES_PERIODO,FECHA_CIERRE_DIA
+			) tod
+		"));
+
+		//$uname=json_encode($query);
+		//$array=json_decode($uname);
+
+		return $query;
+
+		//$accessToken = 'Bearer ' . $this->obtenerAccessToken();
+/*
+		foreach ($query as $valor) {
+
+			$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8000/api/DepositoTarde',
+				['form_params'=>//$request->all()
+					[
+						'cod_local'=>$valor->cod_local,
+						'mes_periodo'=>$valor->mes_periodo,
+						'ano_periodo'=>$valor->ano_periodo,
+						'dia_cierre'=>$valor->dia_cierre,
+						'fecha_cierre_dia'=>$valor->fecha_cierre_dia,
+						'dia_op_banc'=>$valor->dia_op_banc,
+						'fecha_op_bancaria'=>$valor->fecha_op_bancaria,
+						'dif_min'=>$valor->dif_min,
+						'cant_dias'=>$valor->cant_dias,
+						'moneda'=>$valor->moneda
+						'monto_deposito'=>$valor->monto_deposito,
+						'num_operacion'=>$valor->num_operacion,
+						'usuario'=>$valor->usuario,
+						'mon_tot_perdido'=>$valor->mon_tot_perdido,
+						'estado_cuadratura'=>$valor->estado_cuadratura,
+					]
+				]
+			);
+		}
+*/
+//		return redirect('/');
+	}	
+
+	public function postAllDepositos(){
+		ini_set('max_execution_time', 0);
+
+		$query=DB::select(DB::raw("
+			SELECT tod.* 
+			FROM(
+			SELECT td.cod_local, td.mes_periodo, td.ano_periodo, td.dia_cierre, TO_CHAR(td.fecha_cierre_dia,'YYYY-mm-dd') fecha_cierre_dia,TO_CHAR(td.Fecha_Cuadratura_Cierre_Dia,'YYYY-mm-dd hh24:mi:ss') fecha_cuadratura_cierre_dia,
+             	td.dia_op_banc,TO_CHAR(td.fecha_op_bancaria,'YYYY-mm-dd hh24:mi:ss') fecha_op_bancaria, td.dif_min, 
+			    td.cant_dias, td.moneda, td.monto_deposito, td.num_operacion, td.usuario, td.mon_tot_perdido, 
+             	td.estado_cuadratura, td.llave_dif
+			FROM TB_DEP_BANK_PEND td
+			WHERE COD_LOCAL = 'C51'
+			AND CANT_DIAS <> '0'
+			ORDER BY COD_LOCAL,MES_PERIODO,FECHA_CIERRE_DIA
+			) tod
+		"));
+
+		foreach ($query as $valor) {
+
+			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8000/api/verPrueba/'.$valor->llave_dif);
+
+			if($rptStado == 'true'){
+
+			}else{
+
+				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8000/api/DepositoTarde',
+					['form_params'=>//$request->all()
+						[	'cod_local'=>$valor->cod_local,
+							'mes_periodo'=>$valor->mes_periodo,
+							'ano_periodo'=>$valor->ano_periodo,
+							'dia_cierre'=>$valor->dia_cierre,
+							'fecha_cierre_dia'=>$valor->fecha_cierre_dia,
+							'fecha_cuadratura_cierre_dia'=>$valor->fecha_cuadratura_cierre_dia,
+							'dia_op_banc'=>$valor->dia_op_banc,
+							'fecha_op_bancaria'=>$valor->fecha_op_bancaria,
+							'dif_min'=>$valor->dif_min,
+							'cant_dias'=>$valor->cant_dias,
+							'moneda'=>$valor->moneda,
+							'monto_deposito'=>$valor->monto_deposito,
+							'num_operacion'=>$valor->num_operacion,
+							'usuario'=>$valor->usuario,
+							'mon_tot_perdido'=>$valor->mon_tot_perdido,
+							'estado_cuadratura'=>$valor->estado_cuadratura,
+							'llave_dif'=>$valor->llave_dif,
+						]
+					]
+				);
+
+			}
+
+		}
+
+		return "Se Actualizó las Tablas Satisfactoriamente";	
+	}
+
 }
