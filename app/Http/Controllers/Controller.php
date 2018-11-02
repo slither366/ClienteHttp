@@ -58,15 +58,13 @@ class Controller extends BaseController
 	public function pruebaProcedureHttp(){
 
 		$pdo = DB::getPdo();
-		$p1 = 'matematica';
-		$p2 = 'filosofia';
+		$p1 = '722';
+		$p2 = '722102018PEN091631805-10-18 13:20:15';
 
-		$stmt = $pdo->prepare("begin sp_prueba_http(:p1, :p2); end;");
-		$stmt->bindParam(':p1', $p1, PDO::PARAM_INT);
-		$stmt->bindParam(':p2', $p2, PDO::PARAM_INT);
-		$stmt->execute();
+		$stmt = $pdo->prepare("begin pkg_proy_agil.sp_upd_depotarde_up(:pcod, :pKey); end;");
+		$stmt->execute(['pcod' => $p1,'pKey' => $p2,]);
 
-		return redirect('/');
+		return 'Updated!';
 	}	
 
 	public function pruebaFunctionHttp(){
@@ -97,7 +95,7 @@ class Controller extends BaseController
 			TO_CHAR(td.fecha_op_bancaria,'YYYY-mm-dd hh24:mi:ss') fecha_op_bancaria, td.dif_min, 
 			td.cant_dias, td.moneda, td.monto_deposito, td.num_operacion, 
 			td.usuario, td.mon_tot_perdido, td.estado_cuadratura
-			FROM TB_DEP_BANK_PEND td
+			FROM TB_DEPOSITO_TARDE td
 			WHERE COD_LOCAL = 'A00'
 			AND CANT_DIAS <> '0'
 			ORDER BY COD_LOCAL,MES_PERIODO,FECHA_CIERRE_DIA
@@ -113,7 +111,9 @@ class Controller extends BaseController
 	public function registrarDepositos(){
 		ini_set('max_execution_time', 0);
 
-		$query=DB::select(DB::raw("
+		$query = DB::select(DB::raw("select pkg_proy_agil.f_depositos_tarde from dual"));
+
+		/*$query=DB::select(DB::raw("
 			SELECT tod.* 
 			FROM(
 			SELECT td.cod_local, td.mes_periodo, td.ano_periodo, td.dia_cierre, TO_CHAR(td.fecha_cierre_dia,'YYYY-mm-dd') fecha_cierre_dia,TO_CHAR(td.Fecha_Cuadratura_Cierre_Dia,'YYYY-mm-dd hh24:mi:ss') fecha_cuadratura_cierre_dia,
@@ -121,17 +121,27 @@ class Controller extends BaseController
 			td.cant_dias, td.moneda, td.monto_deposito, td.num_operacion, td.usuario, td.mon_tot_perdido, 
 			td.estado_cuadratura, td.llave_dif
 			FROM TB_DEP_BANK_PEND td
-			WHERE COD_LOCAL = 'A00'
+			WHERE 1=1--COD_LOCAL = 'A00'
 			ORDER BY COD_LOCAL,MES_PERIODO,FECHA_CIERRE_DIA
 			) tod
-			"));
+			"));*/
 
 		foreach ($query as $valor) {
+
+			$pdo = DB::getPdo();
+			$codLoca = "";
+			$Key = "";
 
 			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/getLlave/'.$valor->llave_dif);
 			//$rptStado = $this->realizarPeticion('GET','http://3.16.73.131:81/api/getLlave/'.$valor->llave_dif);
 
 			if($rptStado == 'true'){
+
+				$codLocal = $valor->cod_local;
+				$Key = $valor->llave_dif;
+
+				$stmt = $pdo->prepare("begin pkg_proy_agil.sp_upd_depotarde_up(:pcod, :pKey); end;");
+				$stmt->execute(['pcod' => $codLocal,'pKey' => $Key,]);
 
 			}else{
 
@@ -159,6 +169,11 @@ class Controller extends BaseController
 					]
 				);
 
+				$codLocal = $valor->cod_local;
+				$Key = $valor->llave_dif;
+
+				$stmt = $pdo->prepare("begin pkg_proy_agil.sp_upd_depotarde_up(:pcod, :pKey); end;");
+				$stmt->execute(['pcod' => $codLocal,'pKey' => $Key,]);				
 			}
 
 		}
