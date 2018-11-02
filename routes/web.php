@@ -9,16 +9,24 @@ Route::get('/', ['as'=>'home',function() {
 	return view('principal');
 }]);
 
-Route::get('/prueba','Controller@obtenerAccessToken');
+/*==========================================================
+=            Grabar Depositos Tardes en la Nube            =
+==========================================================*/
+Route::get('/postDepositosOnCloud','Controller@registrarDepositos');
 
-Route::get('/data','Controller@test');
+/*=================================================
+=            Grabar Locales en la Nube            =
+=================================================*/
+Route::get('/postLocalesOnCloud','Controller@registrarLocales');
 
-Route::get('/pruebaquery','Controller@pruebaProcedureHttp');
+/*=======================================================
+=            Grabar Jefes Zonales en la Nube            =
+=======================================================*/
+Route::get('/postJefesOnCloud','Controller@registrarJefeZonal');
 
-Route::get('/estudiantes/agregar', ['as'=>'addEstudiante', 'uses' => 'Controller@agregarEstudiante']);
+/*=======================================================
+=            Grabar Jefes x Local en la Nube            =
+=======================================================*/
+Route::get('/postJefesxLocalOnCloud','Controller@registrarJefesxlocal');
 
-Route::post('/estudiantes/agregar', ['as'=>'addEstudiante', 'uses' => 'Controller@prueba']);
 
-Route::get('/pruebaMfa','Controller@getAllDepositosOracle');
-
-Route::get('/postDepositosMfa','Controller@postAllDepositos');
