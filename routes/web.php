@@ -12,7 +12,14 @@ Route::get('/', ['as'=>'home',function() {
 /*==========================================================
 =            Grabar Depositos Tardes en la Nube            =
 ==========================================================*/
-Route::get('/postDepositosOnCloud','Controller@registrarDepositos');
+Route::get('/postDepositos','Controller@registrarDepositos');
+
+Route::get('/revisaDepositos','Controller@revisarDepositos');
+
+/*==============================================================
+=            Grabar Depositos Pendientes en la Nube            =
+==============================================================*/
+Route::get('/postDepositosPendientes','Controller@postDepositosPendientes');
 
 /*=================================================
 =            Grabar Locales en la Nube            =
@@ -29,4 +36,12 @@ Route::get('/postJefesOnCloud','Controller@registrarJefeZonal');
 =======================================================*/
 Route::get('/postJefesxLocalOnCloud','Controller@registrarJefesxlocal');
 
+/*============================================================================
+=            Grabar Transferencias Pendientes Cabecera en la Nube            =
+============================================================================*/
+Route::get('/postTransferenciasCabOnCloud','Controller@registrarTransfPendCab');
 
+/*===========================================================================
+=            Grabar Transferencias Pendientes Detalle en la Nube            =
+===========================================================================*/
+Route::get('/postTransferenciasDetOnCloud','Controller@registrarTransfPendDet');
