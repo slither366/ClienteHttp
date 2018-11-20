@@ -45,3 +45,13 @@ Route::get('/postTransferenciasCabOnCloud','Controller@registrarTransfPendCab');
 =            Grabar Transferencias Pendientes Detalle en la Nube            =
 ===========================================================================*/
 Route::get('/postTransferenciasDetOnCloud','Controller@registrarTransfPendDet');
+
+/*============================================================
+=            Grabar Remesas Tardes en la Nube                =
+============================================================*/
+Route::get('/postRemesasTardesOnCloud','Controller@registrarRemesasTarde');
+
+/*============================================================
+=            Grabar Remesas Tardes en la Nube                =
+============================================================*/
+Route::get('/postRemesasPendientesOnCloud','Controller@registrarRemesasPendiente');

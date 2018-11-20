@@ -474,6 +474,104 @@ class Controller extends BaseController
 		}
 
 		return "Se Actualizó la tabla Transferencias Pendientes Detalle en la Nube.";
-	}	
+	}
+
+	/*================================================================
+	=            POST Registro de Remesas Tardes Detalle             =
+	=================================================================*/
+	public function registrarRemesasTarde(){
+		ini_set('max_execution_time', 0);
+
+		$query = DB::select(DB::raw("select pkg_proy_agil.f_remesas_tarde('N') from dual"));
+
+		foreach ($query as $valor) {
+
+			$pdo = DB::getPdo();
+			$codLoca = "";
+			$Key = "";
+
+			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/remesasTardes/getLlave/'.$valor->llave_dif);
+			//$rptStado = $this->realizarPeticion('GET','http://3.16.73.131:81/api/getLlave/'.$valor->llave_dif);
+
+			if($rptStado == 'true'){
+
+				/*---------- Si Deposito Tarde existe en la Nube se Actualiza el campo UP_CLOUD=S ----------*/
+				if($valor->up_cloud<>'S'){
+					$codLocal = $valor->cod_local;
+					$Key = $valor->llave_dif;
+
+					$stmt = $pdo->prepare("begin pkg_proy_agil.sp_upd_remesatarde_up(:pcod, :pKey); end;");
+					$stmt->execute(['pcod' => $codLocal,'pKey' => $Key,]);					
+				}
+
+			}else{
+
+				/*---------- Si No existe Deposito Tarde se Registra en la Nube y actualizamos UP_CLOUD=S ----------*/
+				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/remesasTardes',
+				//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',					
+					['form_params'=>//$request->all()
+						[	
+							'cod_local'=>$valor->cod_local,
+							'cod_remito'=>$valor->cod_remito,
+							'fecha_creacion_sobre'=>$valor->fecha_creacion_sobre,
+							'fecha_consignada'=>$valor->fecha_consignada,
+							'fec_crea_remito'=>$valor->fec_crea_remito,
+							'cant_dias'=>$valor->cant_dias,
+							'dias_toca' => $valor->dias_toca,
+							'dif_day'=>$valor->dif_day,
+							'num_doc_ident_jefe_zona'=>$valor->num_doc_ident_jefe_zona,
+							'monto'=>$valor->monto,
+							'llave_dif'=>$valor->llave_dif,
+						]
+					]
+				);
+
+				$codLocal = $valor->cod_local;
+				$Key = $valor->llave_dif;
+
+				$stmt = $pdo->prepare("begin pkg_proy_agil.sp_upd_remesatarde_up(:pcod, :pKey); end;");
+				$stmt->execute(['pcod' => $codLocal,'pKey' => $Key,]);
+			}
+
+		}
+
+		return "Se Actualizó las Tablas Satisfactoriamente";	
+	}
+
+	/*================================================================
+	=            POST Registro de Remesas Pendientes Detalle         =
+	=================================================================*/
+	public function registrarRemesasPendiente(){
+		ini_set('max_execution_time', 0);
+		
+		/*=====  Deleteando la Tabla remesasPendientes  ======*/
+		$this->vaciarTabla('api/remesasPendientes/todos');
+
+		/*=====  Insertando nuevos Datos en Remesas Pendientes en Mysql  ======*/
+		$query = DB::select(DB::raw("select pkg_proy_agil.F_REMESAS_PENDIENTE from dual"));
+		
+		foreach ($query as $valor) {
+
+			$respuesta2 = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/remesasPendientes',
+					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
+				[
+					'form_params'=>
+					[
+							'cod_local'=>$valor->cod_local,
+							'fecha_creacion_sobre'=>$valor->fecha_creacion_sobre,
+							'fecha_consignada'=>$valor->fecha_consignada,
+							'cant_dias'=>$valor->cant_dias,
+							'dias_toca' => $valor->dias_toca,
+							'dif_day'=>$valor->dif_day,
+							'num_doc_ident_jefe_zona'=>$valor->num_doc_ident_jefe_zona,
+							'monto'=>$valor->monto,
+					]
+				]
+			);
+
+		}
+		
+		return "Se Actualizó Depositos Pendientes en la Nube.";
+	}
 
 }
