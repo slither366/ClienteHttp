@@ -117,10 +117,10 @@ class Controller extends BaseController
 		return $query;
 	}	
 
-	/*================================================
-	=            POST REGISTRAR DEPOSITOS            =
-	================================================*/
-	public function registrarDepositos(){
+	/*=======================================================
+	=            POST REGISTRAR DEPOSITOS TARDES            =
+	========================================================*/
+	public function registrarDepositosTardes(){
 		ini_set('max_execution_time', 0);
 
 		$query = DB::select(DB::raw("select pkg_proy_agil.f_depositos_tarde('N') from dual"));
