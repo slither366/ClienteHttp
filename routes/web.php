@@ -55,3 +55,8 @@ Route::get('/postRemesasTardesOnCloud','Controller@registrarRemesasTarde');
 =            Grabar Remesas Tardes en la Nube                =
 ============================================================*/
 Route::get('/postRemesasPendientesOnCloud','Controller@registrarRemesasPendiente');
+
+/*============================================================
+=        Grabar Usuarios Jefes Zonales en la Nube            =
+============================================================*/
+Route::get('/postUserJefesZonalesOnCloud','Controller@registrarUsuariosZonales');

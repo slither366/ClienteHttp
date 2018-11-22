@@ -60,7 +60,7 @@ class Controller extends BaseController
 		ini_set('max_execution_time', 0);
 
 		/*=====  Deleteando Tabla  ======*/
-		$respuesta = $this->realizarPeticion('DELETE','http://127.0.0.1:8001/'.$rutaApi, ['form_params'=>[]]);		
+		$respuesta = $this->realizarPeticion('DELETE',env('URL_LOCAL').'/'.$rutaApi, ['form_params'=>[]]);		
 
 	}	
 
@@ -131,7 +131,7 @@ class Controller extends BaseController
 			$codLoca = "";
 			$Key = "";
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/getLlave/'.$valor->llave_dif);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/getLlave/'.$valor->llave_dif);
 			//$rptStado = $this->realizarPeticion('GET','http://3.16.73.131:81/api/getLlave/'.$valor->llave_dif);
 
 			if($rptStado == 'true'){
@@ -148,7 +148,7 @@ class Controller extends BaseController
 			}else{
 
 				/*---------- Si No existe Deposito Tarde se Registra en la Nube y actualizamos UP_CLOUD=S ----------*/
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/DepositoTarde',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/DepositoTarde',
 				//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',					
 					['form_params'=>//$request->all()
 						[	'cod_local'=>$valor->cod_local,
@@ -200,7 +200,7 @@ class Controller extends BaseController
 			$codLoca = "";
 			$Key = "";
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/getLlave/'.$valor->llave_dif);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/getLlave/'.$valor->llave_dif);
 			//$rptStado = $this->realizarPeticion('GET','http://3.16.73.131:81/api/getLlave/'.$valor->llave_dif);
 
 			if($rptStado == 'true'){
@@ -215,7 +215,7 @@ class Controller extends BaseController
 
 			}else{
 
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/DepositoTarde',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/DepositoTarde',
 				//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',					
 					['form_params'=>//$request->all()
 						[	'cod_local'=>$valor->cod_local,
@@ -268,13 +268,13 @@ class Controller extends BaseController
 
 		foreach ($query as $valor) {
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/local/verificaLocal/'.$valor->cod_local);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/local/verificaLocal/'.$valor->cod_local);
 
 			if($rptStado == 'true'){
 
 			}else{
 
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/local',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/local',
 						//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 					[
 						'form_params'=>
@@ -309,13 +309,13 @@ class Controller extends BaseController
 
 		foreach ($query as $valor) {
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/jefezonal/verificaJefe/'.$valor->dni_jefezona);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/jefezonal/verificaJefe/'.$valor->dni_jefezona);
 
 			if($rptStado == 'true'){
 
 			}else{
 
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/jefezonal',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/jefezonal',
 						//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 					[
 						'form_params'=>
@@ -351,13 +351,13 @@ class Controller extends BaseController
 
 		foreach ($query as $valor) {
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/jefexlocal/verificaJefexlocal/'.$valor->cod_local);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/jefexlocal/verificaJefexlocal/'.$valor->cod_local);
 
 			if($rptStado == 'true'){
 
 			}else{
 
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/jefexlocal',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/jefexlocal',
 						//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 					[
 						'form_params'=>
@@ -390,7 +390,7 @@ class Controller extends BaseController
 		
 		foreach ($query as $valor) {
 
-			$respuesta2 = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/DepositoPendiente',
+			$respuesta2 = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/DepositoPendiente',
 					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 				[
 					'form_params'=>
@@ -421,7 +421,7 @@ class Controller extends BaseController
 
 		foreach ($query as $valor) {
 
-			$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/transferenciasCab',
+			$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/transferenciasCab',
 					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 				[
 					'form_params'=>
@@ -455,7 +455,7 @@ class Controller extends BaseController
 
 		foreach ($query as $valor) {
 
-			$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/transferenciasDet',
+			$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/transferenciasDet',
 					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 				[
 					'form_params'=>
@@ -490,7 +490,7 @@ class Controller extends BaseController
 			$codLoca = "";
 			$Key = "";
 
-			$rptStado = $this->realizarPeticion('GET','http://127.0.0.1:8001/api/remesasTardes/getLlave/'.$valor->llave_dif);
+			$rptStado = $this->realizarPeticion('GET',env('URL_LOCAL').'/api/remesasTardes/getLlave/'.$valor->llave_dif);
 			//$rptStado = $this->realizarPeticion('GET','http://3.16.73.131:81/api/getLlave/'.$valor->llave_dif);
 
 			if($rptStado == 'true'){
@@ -507,7 +507,7 @@ class Controller extends BaseController
 			}else{
 
 				/*---------- Si No existe Deposito Tarde se Registra en la Nube y actualizamos UP_CLOUD=S ----------*/
-				$respuesta = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/remesasTardes',
+				$respuesta = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/remesasTardes',
 				//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',					
 					['form_params'=>//$request->all()
 						[	
@@ -552,7 +552,7 @@ class Controller extends BaseController
 		
 		foreach ($query as $valor) {
 
-			$respuesta2 = $this->realizarPeticion('POST','http://127.0.0.1:8001/api/remesasPendientes',
+			$respuesta2 = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/remesasPendientes',
 					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
 				[
 					'form_params'=>
@@ -573,5 +573,37 @@ class Controller extends BaseController
 		
 		return "Se Actualizó Depositos Pendientes en la Nube.";
 	}
+
+	/*==============================================
+	=            POST Registro de Usuarios         =
+	==============================================*/
+	public function registrarUsuariosZonales(){
+		ini_set('max_execution_time', 0);
+
+		/*=====  Insertando nuevos Datos en Remesas Pendientes en Mysql  ======*/
+		$query = DB::select(DB::raw("select pkg_proy_agil.F_USUARIOS_ZONALES from dual"));
+		
+		foreach ($query as $valor) {
+
+			$respuesta2 = $this->realizarPeticion('POST',env('URL_LOCAL').'/api/users',
+					//$respuesta = $this->realizarPeticion('POST','http://3.16.73.131:81/api/DepositoTarde',
+				[
+					'form_params'=>
+					[
+							'name'=>$valor->name,
+							'email'=>$valor->email,
+							'tipo_usuario'=>$valor->tipo_usuario,
+							'dni'=>$valor->dni,
+							'password' => $valor->password,
+							'password_confirmation'=>$valor->password_confirmation,
+					]
+				]
+			);
+
+		}
+		
+		return "Se Actualizaron los Usuarios en la Nube.";
+	}
+
 
 }
